@@ -1,6 +1,12 @@
 'use strict';
 var urlParser = require('url');
 
+exports.checkTicket = function(req, endpoint){
+    var endpointConfig = endpoint[req.params.id];
+
+    return req.query.ticket === endpointConfig.ticket
+};
+
 exports.validateQuery = function (req, endpoint) {
 
     var isValid = true;

@@ -4,25 +4,31 @@ var utils = require('./hdfs-utils');
 
 
 module.exports = function (config) {
-    var endpoint = config.server_config.hdfs;
+    var endpoint = config.server_config.teraserver_hdfs;
 
     return function (req, res) {
+        var ticketIsValid = utils.checkTicket(req, endpoint);
 
-        var query = utils.validateQuery(req, endpoint);
-
-        if (!query.isValid) {
-            res.status(400).json(query.error)
+        if (!ticketIsValid) {
+            res.status(401).json({error: 'invalid ticket for endpoint'})
         }
         else {
-            var endpointConfig = endpoint[req.params.id];
-            var client = new hdfsClient(endpointConfig);
+            var query = utils.validateQuery(req, endpoint);
 
-            client.open(query.path, function (err, data) {
-                if (err) {
-                    res.send(err);
-                }
-                res.send(data);
-            });
+            if (!query.isValid) {
+                res.status(400).json(query.error)
+            }
+            else {
+                var endpointConfig = endpoint[req.params.id];
+                var client = new hdfsClient(endpointConfig);
+
+                client.open(query.path, function (err, data) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.send(data);
+                });
+            }
         }
     }
 };
