@@ -28,10 +28,6 @@ exports.validateQuery = function (req, endpoint) {
         isValid = false;
         error.push(' cannot use ".." in file path ');
     }
-    if (req.query.ticket !== endpointConfig.ticket) {
-        isValid = false;
-        error.push(' invalid ticket for endpoint ')
-    }
 
     return {isValid: isValid, path: path, error: {error: error.join(' | ')}}
 };
