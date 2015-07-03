@@ -1,7 +1,8 @@
 # Logs
 logs
 *.log
-
+config.js
+.idea
 # Runtime data
 pids
 *.pid

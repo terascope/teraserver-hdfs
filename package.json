@@ -1,0 +1,22 @@
+{
+  "name": "teraserver-hdfs",
+  "version": "1.0.0",
+  "description": "Teraserver plugin to allow downloading of files from HDFS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsnoble/teraserver-hdfs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsnoble/teraserver-hdfs/issues"
+  },
+  "homepage": "https://github.com/jsnoble/teraserver-hdfs#readme",
+  "dependencies": {
+    "teraserver": "terascope/teraserver"
+  }
+}
