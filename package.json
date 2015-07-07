@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jsnoble/teraserver-hdfs#readme",
   "dependencies": {
+    "lodash": "^3.10.0",
+    "node-webhdfs": "0.0.4",
     "teraserver": "terascope/teraserver"
   }
 }
