@@ -16,7 +16,8 @@
     "url": "https://github.com/jsnoble/teraserver-hdfs/issues"
   },
   "homepage": "https://github.com/jsnoble/teraserver-hdfs#readme",
-  "dependencies": {
+    "dependencies": {
+      "bluebird": "^2.9.32",
     "lodash": "^3.10.0",
     "node-webhdfs": "0.0.4",
     "teraserver": "terascope/teraserver"

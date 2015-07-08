@@ -69,9 +69,9 @@ function getData(client, queryPath, options) {
 function getChunks(client, query, res, offset, length, total, statusCode) {
     getData(client, query.path, {offset: offset, length: length})
         .then(function (data) {
-            res.status(statusCode).write(data);
+            res.write(data);
             if (offset + length >= total) {
-                res.end();
+                res.status(statusCode).end();
                 return;
             }
             else {
@@ -80,6 +80,56 @@ function getChunks(client, query, res, offset, length, total, statusCode) {
                 return getChunks(client, query, res, newOffset, nextLength, total)
             }
         });
+}
+
+function parseRange(str) {
+    var range, start, end;
+
+    if (str.match(/bytes=/)) {
+        range = str.slice(6).split('-');
+        start = Number(range[0]);
+        end = Number(range[1]);
+        if (isNaN(start) || isNaN(end)) {
+            return false;
+        }
+        else {
+            return {start: start, end: end, statusCode: 206}
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+function processHeaders(req, res, bytes) {
+    if (req.headers.range) {
+        var range = parseRange(req.headers.range);
+        if (!range) {
+            res.status(400).send({error: ' range header is not formatted correctly '});
+            return;
+        }
+        else {
+            if (range.end === 0) {
+                //if end is 0 then it wasn't specified, it should default to entire file
+                range.end = bytes.length
+            }
+            if (range.start >= bytes.length || range.end > bytes.length) {
+                res.set({'Content-Range': '*/' + bytes.length});
+                res.status(416).send({error: ' Requested Range Not Satisfiable '});
+                return;
+            }
+            else {
+                //spec says start and end are zero based and inclusive, e.g. middle to end 1024-2047/2048 Length: 1024
+                var rangeEnd = range.end - 1;
+                res.set({
+                    'Content-Range': 'bytes ' + range.start + '-' + rangeEnd + '/' + bytes.length,
+                    'Content-Length': range.end - range.start
+                });
+
+                return range;
+            }
+        }
+    }
 }
 
 function processError(err) {
@@ -92,5 +142,7 @@ module.exports = {
     formatConfig: formatConfig,
     getData: getData,
     getChunks: getChunks,
-    processError: processError
+    processError: processError,
+    parseRange: parseRange,
+    processHeaders: processHeaders
 };
