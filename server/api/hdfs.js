@@ -33,7 +33,13 @@ module.exports = function (config) {
                         res.send(utils.processError(err));
                     }
                     else {
+                        // range === undefined => no range headers, continue as normal
                         var range = utils.processHeaders(req, res, bytes);
+                        //range === false => need to stop further processing
+                        if (range === false) {
+                            return;
+                        }
+
                         var reqOptions = range ? {offset: range.start, length: range.end - range.start} : {};
                         var statusCode = range ? range.statusCode : 200;
                         var startByte = range ? range.start : 0;

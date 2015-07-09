@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jsnoble/teraserver-hdfs.git"
+    "url": "git+https://github.com/terascope/teraserver-hdfs.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jsnoble/teraserver-hdfs/issues"
+    "url": "https://github.com/terascope/teraserver-hdfs/issues"
   },
-  "homepage": "https://github.com/jsnoble/teraserver-hdfs#readme",
+  "homepage": "https://github.com/terascope/teraserver-hdfs#readme",
     "dependencies": {
       "bluebird": "^2.9.32",
     "lodash": "^3.10.0",

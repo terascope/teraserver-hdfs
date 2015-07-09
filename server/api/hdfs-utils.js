@@ -106,7 +106,7 @@ function processHeaders(req, res, bytes) {
         var range = parseRange(req.headers.range);
         if (!range) {
             res.status(400).send({error: ' range header is not formatted correctly '});
-            return;
+            return false;
         }
         else {
             if (range.end === 0) {
@@ -116,7 +116,7 @@ function processHeaders(req, res, bytes) {
             if (range.start >= bytes.length || range.end > bytes.length) {
                 res.set({'Content-Range': '*/' + bytes.length});
                 res.status(416).send({error: ' Requested Range Not Satisfiable '});
-                return;
+                return false;
             }
             else {
                 //spec says start and end are zero based and inclusive, e.g. middle to end 1024-2047/2048 Length: 1024
