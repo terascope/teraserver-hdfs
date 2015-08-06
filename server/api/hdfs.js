@@ -1,7 +1,7 @@
 //'use strict';
 var hdfsClient = require('node-webhdfs').WebHDFSClient;
 var utils = require('./hdfs-utils');
-
+//var zlib = require('zlib');
 
 module.exports = function (config) {
     var endpoint = config.server_config.teraserver_hdfs;
@@ -17,6 +17,7 @@ module.exports = function (config) {
 
             // notifying client that range is permissible
             res.set('Accept-Ranges', 'bytes');
+            res.set('Content-Type', 'application/octet-stream');
 
             if (!query.isValid) {
                 res.status(400).json(query.error)
@@ -26,7 +27,7 @@ module.exports = function (config) {
                 var client = new hdfsClient(endpointConfig);
 
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
-                var byteInterval = 1000000;
+                var byteInterval = 1000;
 
                 client.getFileStatus(query.path, function (err, bytes) {
                     if (err) {
@@ -43,19 +44,23 @@ module.exports = function (config) {
                         var reqOptions = range ? {offset: range.start, length: range.end - range.start} : {};
                         var statusCode = range ? range.statusCode : 200;
                         var startByte = range ? range.start : 0;
+                        var reqOptions = {
+                            'Content-Type': 'application/octet-stream',
+                            'Accept-Encoding': 'gzip',
+                            'encoding': null
+                        };
 
-                    //if less then byteInterval just send file
+                        //if less then byteInterval just send file
                         if (bytes.length < byteInterval) {
 
-                            utils.getData(client, query.path, reqOptions)
+                            utils.getData(client, query.path, reqOptions, reqOptions)
                                 .then(function (data) {
                                     res.status(statusCode).send(data);
                                 });
                         }
                         else {
                             var getChunks = utils.getChunks;
-
-                            getChunks(client, query, res, startByte, byteInterval, bytes.length, statusCode);
+                            getChunks(client, query, res, startByte, byteInterval, bytes.length, statusCode, reqOptions);
 
                         }
                     }
