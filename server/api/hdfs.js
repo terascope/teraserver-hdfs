@@ -27,7 +27,7 @@ module.exports = function (config) {
                 var client = new hdfsClient(endpointConfig);
 
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
-                var byteInterval = 1000;
+                var byteInterval = 1000000;
 
                 client.getFileStatus(query.path, function (err, bytes) {
                     if (err) {
