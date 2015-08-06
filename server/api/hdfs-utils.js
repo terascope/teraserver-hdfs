@@ -51,11 +51,10 @@ function formatConfig(obj) {
     return clone;
 }
 
-function getData(client, queryPath, options) {
-    var options = options ? options : {};
-
+function getData(client, queryPath, hdOptions, reqOptions) {
+    var hdOptions = hdOptions ? hdOptions : {};
     return new Promise(function (resolve, reject) {
-        client.open(queryPath, options, function (err, data) {
+        client.open(queryPath, hdOptions, reqOptions, function (err, data) {
             if (err) {
                 reject(err);
             }
@@ -66,10 +65,11 @@ function getData(client, queryPath, options) {
     });
 }
 
-function getChunks(client, query, res, offset, length, total, statusCode) {
-    getData(client, query.path, {offset: offset, length: length})
+function getChunks(client, query, res, offset, length, total, statusCode, reqOptions) {
+    getData(client, query.path, {offset: offset, length: length}, reqOptions)
         .then(function (data) {
-            res.write(data);
+            res.write(data, 'binary');
+
             if (offset + length >= total) {
                 res.status(statusCode).end();
                 return;
@@ -77,7 +77,7 @@ function getChunks(client, query, res, offset, length, total, statusCode) {
             else {
                 var newOffset = offset + length;
                 var nextLength = newOffset + length <= total ? length : total - newOffset;
-                return getChunks(client, query, res, newOffset, nextLength, total)
+                return getChunks(client, query, res, newOffset, nextLength, total, statusCode, reqOptions)
             }
         });
 }
