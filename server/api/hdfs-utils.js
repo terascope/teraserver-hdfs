@@ -53,8 +53,8 @@ function formatConfig(obj) {
 
 function getData(client, queryPath, hdOptions, reqOptions) {
     var hdOptions = hdOptions ? hdOptions : {};
-    return new Promise(function (resolve, reject) {
-        client.open(queryPath, hdOptions, reqOptions, function (err, data) {
+    return new Promise(function(resolve, reject) {
+        client.open(queryPath, hdOptions, reqOptions, function(err, data) {
             if (err) {
                 reject(err);
             }
@@ -67,7 +67,7 @@ function getData(client, queryPath, hdOptions, reqOptions) {
 
 function getChunks(client, query, res, offset, length, total, statusCode, reqOptions) {
     getData(client, query.path, {offset: offset, length: length}, reqOptions)
-        .then(function (data) {
+        .then(function(data) {
             res.write(data, 'binary');
 
             if (offset + length >= total) {

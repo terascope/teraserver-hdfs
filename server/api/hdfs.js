@@ -1,12 +1,12 @@
-//'use strict';
+'use strict';
+
 var hdfsClient = require('node-webhdfs').WebHDFSClient;
 var utils = require('./hdfs-utils');
-//var zlib = require('zlib');
 
-module.exports = function (config) {
-    var endpoint = config.server_config.teraserver_hdfs;
+module.exports = function(config) {
+    var endpoint = config.server_config.teraserver.plugins['teraserver-hdfs'];
 
-    return function (req, res) {
+    return function(req, res) {
         var ticketIsValid = utils.checkTicket(req, endpoint);
 
         if (!ticketIsValid) {
@@ -29,7 +29,7 @@ module.exports = function (config) {
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
                 var byteInterval = 1000000;
 
-                client.getFileStatus(query.path, function (err, bytes) {
+                client.getFileStatus(query.path, function(err, bytes) {
                     if (err) {
                         res.send(utils.processError(err));
                     }
@@ -54,7 +54,7 @@ module.exports = function (config) {
                         if (bytes.length < byteInterval) {
 
                             utils.getData(client, query.path, reqOptions, reqOptions)
-                                .then(function (data) {
+                                .then(function(data) {
                                     res.status(statusCode).send(data);
                                 });
                         }
