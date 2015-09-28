@@ -4,7 +4,7 @@ var hdfsClient = require('node-webhdfs').WebHDFSClient;
 var utils = require('./hdfs-utils');
 
 module.exports = function(config) {
-    var endpoint = config.server_config.teraserver.plugins['teraserver-hdfs'];
+    var endpoint = config.server_config['teraserver-hdfs'];
 
     return function(req, res) {
         var ticketIsValid = utils.checkTicket(req, endpoint);
@@ -25,7 +25,6 @@ module.exports = function(config) {
             else {
                 var endpointConfig = utils.formatConfig(endpoint[req.params.id]);
                 var client = new hdfsClient(endpointConfig);
-
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
                 var byteInterval = 1000000;
 
