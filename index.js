@@ -33,9 +33,10 @@ var api = {
         var config = this._config;
         var hdfsDownload = require('./server/api/hdfs_download')(config);
         var hdfsUpload = require('./server/api/hdfs_upload')(config);
+        var hdfsDelete = require('./server/api/hdfs_delete')(config);
 
         function hdfs(req, res){
-            var routes = {GET: hdfsDownload, POST: hdfsUpload, PUT: hdfsUpload};
+            var routes = {GET: hdfsDownload, POST: hdfsUpload, PUT: hdfsUpload, DELETE: hdfsDelete};
             routes[req.method](req, res);
         }
 
