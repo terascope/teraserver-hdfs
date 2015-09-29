@@ -1,9 +1,30 @@
 {
+  "teraserver-hdfs": {
+    "google": {
+      "user": "User",
+      "namenode_port": 50070,
+      "namenode_host": "localhost",
+      "directory": "user/google",
+      "path_prefix": "/webhdfs/v1",
+      "ticket": "secretPassword1"
+    },
+    "yahoo": {
+      "user": "User",
+      "namenode_port": 50070,
+      "namenode_host": "localhost",
+      "directory": "user/yahoo",
+      "path_prefix": "/webhdfs/v1",
+      "ticket": "secretPassword2"
+    }
+  },
   "teraserver": {
     "shutdown_timeout": 5,
     "port": 8000,
-    "plugins" : {
-      "names": ["teranaut", "teraserver-hdfs"],
+    "plugins": {
+      "names": [
+        "teranaut",
+        "teraserver-hdfs"
+      ],
       "path": "/Users/jarednoble/Projects/terascope/teraserver/plugins"
     }
   },
