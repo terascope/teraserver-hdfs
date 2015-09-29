@@ -6,7 +6,9 @@ var Promise = require('bluebird');
 function checkTicket(req, endpoint) {
     var endpointConfig = endpoint[req.params.id];
 
-    return req.query.ticket === endpointConfig.ticket
+    var ticket = req.query.ticket ? req.query.ticket : req.params.ticket;
+
+    return ticket === endpointConfig.ticket
 }
 
 function validateQuery(req, endpoint) {
@@ -47,6 +49,8 @@ function formatConfig(obj) {
             clone.path_prefix += clone.directory;
         }
     }
+
+    clone.uri = 'http://' + clone.namenode_host + ':' + clone.namenode_port + clone.path_prefix;
 
     return clone;
 }

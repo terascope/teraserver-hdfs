@@ -31,10 +31,17 @@ var api = {
 
     routes: function() {
         var config = this._config;
-      //  console.log('config inside hdfs', config);
-        var hdfs = require('./server/api/hdfs')(config);
+        var hdfsDownload = require('./server/api/hdfs_download')(config);
+        var hdfsUpload = require('./server/api/hdfs_upload')(config);
+        var hdfsDelete = require('./server/api/hdfs_delete')(config);
 
-        app.use('/api/v1/hdfs/:id', hdfs);
+        function hdfs(req, res){
+            var routes = {GET: hdfsDownload, POST: hdfsUpload, PUT: hdfsUpload, DELETE: hdfsDelete};
+            routes[req.method](req, res);
+        }
+
+        app.use('/api/v1/hdfs/:id/', hdfs);
+
     },
 
     post: function() {

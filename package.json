@@ -16,10 +16,11 @@
     "url": "https://github.com/terascope/teraserver-hdfs/issues"
   },
   "homepage": "https://github.com/terascope/teraserver-hdfs#readme",
-    "dependencies": {
-      "bluebird": "^2.9.32",
+  "dependencies": {
+    "bluebird": "^2.9.32",
     "lodash": "^3.10.0",
     "node-webhdfs": "0.0.4",
+    "request": "^2.64.0",
     "teraserver": "terascope/teraserver"
   }
 }
