@@ -11,12 +11,12 @@ function checkTicket(req, endpoint) {
 
     if (endpointConfig === undefined) {
         isValid = false;
-        error.push( 'endpoint does not exist' )
+        error.push('endpoint does not exist')
     }
 
     if (endpointConfig && ticket !== endpointConfig.ticket) {
         isValid = false;
-        error.push( 'invalid ticket for endpoint' )
+        error.push('invalid ticket for endpoint')
     }
 
     return {isValid: isValid, error: {error: error.join(' | ')}}
