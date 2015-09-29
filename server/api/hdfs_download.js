@@ -7,10 +7,10 @@ module.exports = function(config) {
     var endpoint = config.server_config['teraserver-hdfs'];
 
     return function(req, res) {
-        var ticketIsValid = utils.checkTicket(req, endpoint);
+        var ticket = utils.checkTicket(req, endpoint);
 
-        if (!ticketIsValid) {
-            res.status(401).json({error: 'invalid ticket for endpoint'})
+        if (!ticket.isValid) {
+            res.status(401).json(ticket.error)
         }
         else {
             var query = utils.validateQuery(req, endpoint);

@@ -4,11 +4,22 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 
 function checkTicket(req, endpoint) {
+    var isValid = true;
+    var error = [];
     var endpointConfig = endpoint[req.params.id];
-
     var ticket = req.query.ticket ? req.query.ticket : req.params.ticket;
 
-    return ticket === endpointConfig.ticket
+    if (endpointConfig === undefined) {
+        isValid = false;
+        error.push( 'endpoint does not exist' )
+    }
+
+    if (endpointConfig && ticket !== endpointConfig.ticket) {
+        isValid = false;
+        error.push( 'invalid ticket for endpoint' )
+    }
+
+    return {isValid: isValid, error: {error: error.join(' | ')}}
 }
 
 function validateQuery(req, endpoint) {
