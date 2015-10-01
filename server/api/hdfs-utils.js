@@ -81,7 +81,7 @@ function getData(client, queryPath, hdOptions, reqOptions) {
 }
 
 function getChunks(client, query, res, offset, length, total, statusCode, reqOptions) {
-    getData(client, query.path, {offset: offset, length: length}, reqOptions)
+    getData(client, query, {offset: offset, length: length}, reqOptions)
         .then(function(data) {
             res.write(data, 'binary');
 

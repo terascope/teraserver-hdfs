@@ -52,6 +52,14 @@
         "default": {
           "servers": "mongodb://localhost:27017/hdfs"
         }
+      },
+      "hdfs": {
+        "default": {
+          "user": "User",
+          "namenode_port": 50070,
+          "namenode_host": "localhost",
+          "path_prefix": "/webhdfs/v1"
+        }
       }
     }
   }

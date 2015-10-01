@@ -1,10 +1,10 @@
 'use strict';
 
-var hdfsClient = require('node-webhdfs').WebHDFSClient;
 var utils = require('./hdfs-utils');
 
 module.exports = function(config) {
     var endpoint = config.server_config['teraserver-hdfs'];
+    var client = config.context.foundation.getConnection({type: 'hdfs', cached: true}).client;
 
     return function(req, res) {
         var ticket = utils.checkTicket(req, endpoint);
@@ -20,9 +20,9 @@ module.exports = function(config) {
             }
             else {
                 var endpointConfig = utils.formatConfig(endpoint[req.params.id]);
-                var client = new hdfsClient(endpointConfig);
+                var filePath = '/' + endpointConfig.directory + query.path;
 
-                client.del(query.path, function(err, bool) {
+                client.del(filePath, function(err, bool) {
                     if (err) {
                         res.send({error: err});
                     }

@@ -1,10 +1,10 @@
 'use strict';
 
-var hdfsClient = require('node-webhdfs').WebHDFSClient;
 var utils = require('./hdfs-utils');
 
 module.exports = function(config) {
     var endpoint = config.server_config['teraserver-hdfs'];
+    var client = config.context.foundation.getConnection({type: 'hdfs', cached: true}).client;
 
     return function(req, res) {
         var ticket = utils.checkTicket(req, endpoint);
@@ -24,11 +24,13 @@ module.exports = function(config) {
             }
             else {
                 var endpointConfig = utils.formatConfig(endpoint[req.params.id]);
-                var client = new hdfsClient(endpointConfig);
+
+                var filePath = '/' + endpointConfig.directory + query.path;
+
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
                 var byteInterval = 1000000;
 
-                client.getFileStatus(query.path, function(err, bytes) {
+                client.getFileStatus(filePath, function(err, bytes) {
                     if (err) {
                         res.send(utils.processError(err));
                     }
@@ -52,14 +54,14 @@ module.exports = function(config) {
                         //if less then byteInterval just send file
                         if (bytes.length < byteInterval) {
 
-                            utils.getData(client, query.path, reqOptions, reqOptions)
+                            utils.getData(client, filePath, reqOptions, reqOptions)
                                 .then(function(data) {
                                     res.status(statusCode).send(data);
                                 });
                         }
                         else {
                             var getChunks = utils.getChunks;
-                            getChunks(client, query, res, startByte, byteInterval, bytes.length, statusCode, reqOptions);
+                            getChunks(client, filePath, res, startByte, byteInterval, bytes.length, statusCode, reqOptions);
 
                         }
                     }
