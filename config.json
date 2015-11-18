@@ -1,31 +1,65 @@
 {
+  "teraserver-hdfs": {
+    "google": {
+      "user": "User",
+      "namenode_port": 50070,
+      "namenode_host": "localhost",
+      "directory": "user/google",
+      "path_prefix": "/webhdfs/v1",
+      "ticket": "secretPassword1"
+    },
+    "yahoo": {
+      "user": "User",
+      "namenode_port": 50070,
+      "namenode_host": "localhost",
+      "directory": "user/yahoo",
+      "path_prefix": "/webhdfs/v1",
+      "ticket": "secretPassword2"
+    }
+  },
   "teraserver": {
     "shutdown_timeout": 5,
-    "plugins" : ["teranaut", "teraserver-hdfs"],
-    "plugins_path": "/Users/jarednoble/Projects/terascope/teraserver/plugins"
+    "port": 8000,
+    "plugins": {
+      "names": [
+        "teranaut",
+        "teraserver-hdfs"
+      ],
+      "path": "/Users/jarednoble/Projects/terascope/teraserver/plugins"
+    }
   },
   "terafoundation": {
     "environment": "development",
     "log_path": "/Users/jarednoble/Desktop/logs",
-    "elasticsearch": {
-      "default": {
-        "host": [
-          "127.0.0.1:9200"
-        ],
-        "keepAlive": false,
-        "maxRetries": 5,
-        "maxSockets": 20
-      }
-    },
-    "statsd": {
-      "default": {
-        "host": "127.0.0.1",
-        "mock": false
-      }
-    },
-    "mongodb": {
-      "default": {
-        "servers": "mongodb://localhost:27017/watchlist"
+    "connectors": {
+      "elasticsearch": {
+        "default": {
+          "host": [
+            "127.0.0.1:9200"
+          ],
+          "keepAlive": false,
+          "maxRetries": 5,
+          "maxSockets": 20
+        }
+      },
+      "statsd": {
+        "default": {
+          "host": "127.0.0.1",
+          "mock": false
+        }
+      },
+      "mongodb": {
+        "default": {
+          "servers": "mongodb://localhost:27017/hdfs"
+        }
+      },
+      "hdfs": {
+        "default": {
+          "user": "User",
+          "namenode_port": 50070,
+          "namenode_host": "localhost",
+          "path_prefix": "/webhdfs/v1"
+        }
       }
     }
   }

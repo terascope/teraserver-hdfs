@@ -6,7 +6,7 @@ var hdfs_schema = require('./system_schema');
 var api = {
     _config: undefined,
 
-    schema: function(){
+    schema: function() {
         return hdfs_schema.config_schema();
     },
 
@@ -35,7 +35,7 @@ var api = {
         var hdfsUpload = require('./server/api/hdfs_upload')(config);
         var hdfsDelete = require('./server/api/hdfs_delete')(config);
 
-        function hdfs(req, res){
+        function hdfs(req, res) {
             var routes = {GET: hdfsDownload, POST: hdfsUpload, PUT: hdfsUpload, DELETE: hdfsDelete};
             routes[req.method](req, res);
         }

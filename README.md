@@ -27,7 +27,7 @@ Range in your header.
 
 ### Example to download first megabyte of file and save it as bigfile.log in current directory
 ```
-curl -r 0-1000000 'localhost:8000/api/v1/hdfs/myfiles/bigFile.log/?token=f0add1eedd0d0314521d1d2e343ee8c7243e9d62&ticket=secretPassword' -o bigFile.log
+curl -r 0-1000000 'localhost:8000/api/v1/hdfs/ENDPOINT/FILE/?token=TOKEN&ticket=TICKET' -o bigFile.log
 ```
 
 
@@ -48,3 +48,22 @@ The path_prefix is listed as optional because it will be automatically added to 
 specify another. myFiles is the endpoint listed in the curl command. It will then read the configuration to verify
 if the ticket given is correct. If so, then the user is allowed to retrieve files or access directories that are
 available by the directory listed in the config. A request by the user with ../ in the file path will be rejected.
+
+### Example of file upload
+
+```
+curl -XPOST -H 'Content-type: application/octet-stream' --data-binary @/path/to/file 'localhost:8000/api/v1/hdfs/ENDPOINT/FILENAME?token=TOKEN&ticket=TICKET'
+
+Response: 'Upload Complete'
+```
+It is important to set the content-type to application/octect-stream and to use the --data-binary flag
+If not then curl could parse the file itself and will corrupt any binary data and even change the formating of regular
+text files.
+
+### Example of file deletion
+
+```
+$  curl -XDELETE 'localhost:8000/api/v1/hdfs/ENDPOINT/FILE?token=TOKEN&ticket=TICKET'
+
+Response: 'Deletion successful'
+```
