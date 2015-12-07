@@ -6,6 +6,7 @@ var _ = require('lodash');
 
 module.exports = function(config) {
     var endpoint = config.server_config['teraserver-hdfs'];
+    var connectionEndpoint = config.server_config.terafoundation.connectors.hdfs;
 
     return function(req, res) {
 
@@ -15,14 +16,15 @@ module.exports = function(config) {
             res.status(401).json(ticket.error)
         }
         else {
-
             var query = utils.validateQuery(req, endpoint);
 
             if (!query.isValid) {
                 res.status(400).json(query.error)
             }
             else {
-                var endpointConfig = utils.formatConfig(endpoint[req.params.id]);
+                var connection = endpoint[req.params.id].connection ? endpoint[req.params.id].connection : 'default';
+                var connectionConfig = connectionEndpoint[connection];
+                var uri = utils.getUri(connectionConfig, endpoint[req.params.id]);
 
                 var reqOptions = {
                     json: false,
@@ -33,9 +35,8 @@ module.exports = function(config) {
 
                 var firstReqOptions = _.clone(reqOptions);
                 firstReqOptions.followRedirect = false;
-                firstReqOptions.qs = {op: 'create', 'user.name': endpointConfig.user, overwrite: true};
-                firstReqOptions.uri = endpointConfig.uri + query.path;
-
+                firstReqOptions.qs = {op: 'create', 'user.name': connectionConfig.user, overwrite: true};
+                firstReqOptions.uri = uri + query.path;
 
                 request.put(firstReqOptions, function(err, response, body) {
                     if (response.statusCode === 307) {
@@ -50,7 +51,6 @@ module.exports = function(config) {
                                         response: response.statusCode,
                                         body: body
                                     });
-
                                 }
                             }
                         ));
@@ -59,7 +59,6 @@ module.exports = function(config) {
                         res.send({error: 'expected 307 redirect', response: response.statusCode, body: body});
                     }
                 });
-
             }
         }
     }
