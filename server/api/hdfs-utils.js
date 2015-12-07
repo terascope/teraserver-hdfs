@@ -153,7 +153,12 @@ function processError(err) {
 }
 
 function getClient(config, endpoint) {
-    console.log('what connection is this?', endpoint.connection);
+    var connection = 'default';
+
+    if (endpoint && endpoint.connection) {
+        connection = endpoint.connection
+    }
+
     return config.context.foundation.getConnection({type: 'hdfs', endpoint: endpoint.connection, cached: true}).client;
 }
 

@@ -33,21 +33,48 @@ curl -r 0-1000000 'localhost:8000/api/v1/hdfs/ENDPOINT/FILE/?token=TOKEN&ticket=
 
 ### Example config of hdfs plugin for teraserver
 ```
-config.teraserver_hdfs = {};
-config.teraserver_hdfs.myFiles = {
-    user: 'User',           //configure to specify hadoop user
-    namenode_port: 50070,
-    namenode_host: 'localhost',
-    path_prefix: '/webhdfs/v1',  // this is standard http api for hadoop hdfs (optional)
-    directory:'some/path/relative/to/root',    // set path relative to root
-    ticket: 'secretPassword'        //set whatever password you prefer, it must pass a === check
+
+ "terafoundation": {
+    "environment": "development",
+    "log_path": "log/path",
+    "connectors": {
+      "hdfs": {
+        "default": {
+          "user": "User",
+          "namenode_port": 50070,
+          "namenode_host": "localhost",
+          "path_prefix": "/webhdfs/v1"      // this is standard http api for hadoop hdfs
+        },
+        "second_connection": {
+          "user": "User",
+          "namenode_port": 50070,
+          "namenode_host": "someOtherHost",
+          "path_prefix": "/webhdfs/v1"      // this is standard http api for hadoop hdfs
+        }
+      }
+    }
+  }
+"teraserver-hdfs": {
+    "endpoint": {
+      "connection": "default_connection",
+      "directory": "/some/dir",        // set path relative to root
+      "ticket": "secretPassword1"    //set whatever password you prefer, it must pass a === check
+    },
+    "other_endpoint": {
+      "connection": "second_connection",
+      "directory": "/another/dir",              // set path relative to root
+      "ticket": "secretPassword2"   //set whatever password you prefer, it must pass a === check
+    }
+  }
 };
 
 ```
-The path_prefix is listed as optional because it will be automatically added to your query by default unless you
-specify another. myFiles is the endpoint listed in the curl command. It will then read the configuration to verify
-if the ticket given is correct. If so, then the user is allowed to retrieve files or access directories that are
-available by the directory listed in the config. A request by the user with ../ in the file path will be rejected.
+In teraserver-hdfs, you specify the endpoints that are available. Each endpoint must specify a ticket, which is
+essentially any password you would like to set, it must be able to pass a === check. Users must provide this ticket on
+ each request to access the api. Setting a path will restrict users to that directory and any subdirectory it contains.
+ A request by the user with ../ in the file path will be rejected. the connection key must match one of the namespaces
+ set in terafoundation.connectors.hdfs as shown above. If not set it will use the default connection.
+
 
 ### Example of file upload
 
