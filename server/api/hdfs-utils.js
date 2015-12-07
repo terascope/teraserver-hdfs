@@ -159,7 +159,7 @@ function getClient(config, endpoint) {
         connection = endpoint.connection
     }
 
-    return config.context.foundation.getConnection({type: 'hdfs', endpoint: endpoint.connection, cached: true}).client;
+    return config.context.foundation.getConnection({type: 'hdfs', endpoint: connection, cached: true}).client;
 }
 
 function getDirPath(endpoint) {

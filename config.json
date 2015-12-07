@@ -6,7 +6,7 @@
       "ticket": "secretPassword1"
     },
     "yahoo": {
-      "connection": "second",
+
       "directory": "/user/yahoo",
       "ticket": "secretPassword2"
     }

@@ -22,7 +22,8 @@ module.exports = function(config) {
                 res.status(400).json(query.error)
             }
             else {
-                var connectionConfig = connectionEndpoint[endpoint[req.params.id].connection];
+                var connection = endpoint[req.params.id].connection ? endpoint[req.params.id].connection : 'default';
+                var connectionConfig = connectionEndpoint[connection];
                 var uri = utils.getUri(connectionConfig, endpoint[req.params.id]);
 
                 var reqOptions = {
