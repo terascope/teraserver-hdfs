@@ -2,7 +2,7 @@
 
 var schema = {
 
-    doc: 'What should be returned is an object with keys set to the specific endpoint ' +
+    /*doc: 'What should be returned is an object with keys set to the specific endpoint ' +
     '(ie /api/v1/hdfs/google or /api/v1/hdfs/yahoo) user refers to the hdfs user profile, and should only change' +
     'based off of security rules set on the remote hdfs server.  The directory setting is the path which exists' +
     'inside the hdfs file system from which they are able to access any file or directory at that level or lower.' +
@@ -14,22 +14,16 @@ var schema = {
 
     default: {
         google: {
-            user: 'User',
-            namenode_port: 50070,
-            namenode_host: 'localhost',
             directory: 'user/google',
-            path_prefix: '/webhdfs/v1',
+            connection: 'default',
             ticket: 'secretPassword1'
         },
         yahoo: {
-            user: 'webuser',
-            namenode_port: 50070,
-            namenode_host: 'localhost',
             directory: 'user/yahoo',
-            path_prefix: '/webhdfs/v1',
+            connection: 'default',
             ticket: 'secretPassword2'
         }
-    }
+    }*/
 
 };
 
