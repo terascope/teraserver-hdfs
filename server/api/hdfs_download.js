@@ -23,10 +23,9 @@ module.exports = function(config) {
             }
             else {
                 var requestedEndpoint = endpoint[req.params.id];
-                var dirPath = requestedEndpoint.directory ? requestedEndpoint.directory : '';
+                var dirPath = utils.getDirPath(requestedEndpoint);
                 var client = utils.getClient(config, requestedEndpoint);
-
-                var filePath = '/' + dirPath + query.path;
+                var filePath = dirPath + query.path;
 
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
                 var byteInterval = 1000000;

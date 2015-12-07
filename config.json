@@ -7,7 +7,7 @@
     },
     "yahoo": {
       "connection": "second",
-      "directory": "user/yahoo",
+      "directory": "/user/yahoo",
       "ticket": "secretPassword2"
     }
   },

@@ -162,6 +162,16 @@ function getClient(config, endpoint) {
     return config.context.foundation.getConnection({type: 'hdfs', endpoint: endpoint.connection, cached: true}).client;
 }
 
+function getDirPath(endpoint) {
+    var dirPath = endpoint.directory ? endpoint.directory : '';
+
+    if (dirPath[0] !== '/') {
+        dirPath = '/' + dirPath
+    }
+
+    return dirPath
+}
+
 module.exports = {
     checkTicket: checkTicket,
     validateQuery: validateQuery,
@@ -171,5 +181,6 @@ module.exports = {
     processError: processError,
     parseRange: parseRange,
     processHeaders: processHeaders,
-    getClient: getClient
+    getClient: getClient,
+    getDirPath: getDirPath
 };

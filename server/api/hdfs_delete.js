@@ -19,9 +19,9 @@ module.exports = function(config) {
             }
             else {
                 var requestedEndpoint = endpoint[req.params.id];
-                var dirPath = requestedEndpoint.directory ? requestedEndpoint.directory : '';
+                var dirPath = utils.getDirPath(requestedEndpoint);
                 var client = utils.getClient(config, requestedEndpoint);
-                var filePath = '/' + dirPath + query.path;
+                var filePath = dirPath + query.path;
 
                 client.del(filePath, function(err, bool) {
                     if (err) {
