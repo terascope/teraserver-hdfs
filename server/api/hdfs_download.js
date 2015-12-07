@@ -4,7 +4,6 @@ var utils = require('./hdfs-utils');
 
 module.exports = function(config) {
     var endpoint = config.server_config['teraserver-hdfs'];
-    var client = config.context.foundation.getConnection({type: 'hdfs', cached: true}).client;
 
     return function(req, res) {
         var ticket = utils.checkTicket(req, endpoint);
@@ -23,9 +22,11 @@ module.exports = function(config) {
                 res.status(400).json(query.error)
             }
             else {
-                var endpointConfig = utils.formatConfig(endpoint[req.params.id]);
+                var requestedEndpoint = endpoint[req.params.id];
+                var dirPath = requestedEndpoint.directory ? requestedEndpoint.directory : '';
+                var client = utils.getClient(config, requestedEndpoint);
 
-                var filePath = '/' + endpointConfig.directory + query.path;
+                var filePath = '/' + dirPath + query.path;
 
                 //adjust byteInterval to change how big the slice is, set to 1 megabyte
                 var byteInterval = 1000000;
@@ -67,7 +68,6 @@ module.exports = function(config) {
                     }
 
                 });
-
             }
         }
     }

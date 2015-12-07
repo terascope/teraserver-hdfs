@@ -45,25 +45,26 @@ function validateQuery(req, endpoint) {
     return {isValid: isValid, path: path, error: {error: error.join(' | ')}}
 }
 
-function formatConfig(obj) {
-    var clone = _.clone(obj);
+function getUri(connectionConfig, endpointConfig) {
+    var directory = endpointConfig.directory;
+    var path = connectionConfig.path_prefix[0] === '/' ? connectionConfig.path_prefix : '/' + connectionConfig.path_prefix;
 
-    if (!clone.path_prefix) {
-        clone.path_prefix = '/webhdfs/v1';
-    }
-    if (clone.directory) {
+    var fullPath;
+
+    if (directory) {
         //checking if there is a '/' in-between the two
-        if (!(clone.path_prefix[clone.path_prefix.length - 1] === '/') && !(clone.directory[0] === '/')) {
-            clone.path_prefix += '/' + clone.directory;
+        if (!(path[path.length - 1] === '/') && !(directory[0] === '/')) {
+            fullPath = path + '/' + directory;
         }
         else {
-            clone.path_prefix += clone.directory;
+            fullPath = path + directory;
         }
     }
+    else {
+        fullPath = path;
+    }
 
-    clone.uri = 'http://' + clone.namenode_host + ':' + clone.namenode_port + clone.path_prefix;
-
-    return clone;
+    return 'http://' + connectionConfig.namenode_host + ':' + connectionConfig.namenode_port + fullPath;
 }
 
 function getData(client, queryPath, hdOptions, reqOptions) {
@@ -151,13 +152,19 @@ function processError(err) {
     return {error: err.message};
 }
 
+function getClient(config, endpoint) {
+    console.log('what connection is this?', endpoint.connection);
+    return config.context.foundation.getConnection({type: 'hdfs', endpoint: endpoint.connection, cached: true}).client;
+}
+
 module.exports = {
     checkTicket: checkTicket,
     validateQuery: validateQuery,
-    formatConfig: formatConfig,
+    getUri: getUri,
     getData: getData,
     getChunks: getChunks,
     processError: processError,
     parseRange: parseRange,
-    processHeaders: processHeaders
+    processHeaders: processHeaders,
+    getClient: getClient
 };
