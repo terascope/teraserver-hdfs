@@ -97,10 +97,10 @@ function getChunks(client, query, res, offset, length, total, statusCode, reqOpt
             }
         }).catch(function(e) {
             if (e.errno === 'ECONNRESET') {
-                logger.error("HDFS is currently down", e)
+                logger.error("teraserver-hdfs: HDFS is currently down", e)
             }
             else {
-                logger.error(e)
+                logger.error("teraserver-hdfs:",e)
             }
 
             res.status(503).end()
