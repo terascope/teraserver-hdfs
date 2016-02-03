@@ -81,7 +81,7 @@ function getData(client, queryPath, hdOptions, reqOptions) {
     });
 }
 
-function getChunks(client, query, res, offset, length, total, statusCode, reqOptions) {
+function getChunks(client, query, res, offset, length, total, statusCode, reqOptions, logger) {
     getData(client, query, {offset: offset, length: length}, reqOptions)
         .then(function(data) {
             res.write(data, 'binary');
@@ -93,8 +93,17 @@ function getChunks(client, query, res, offset, length, total, statusCode, reqOpt
             else {
                 var newOffset = offset + length;
                 var nextLength = newOffset + length <= total ? length : total - newOffset;
-                return getChunks(client, query, res, newOffset, nextLength, total, statusCode, reqOptions)
+                return getChunks(client, query, res, newOffset, nextLength, total, statusCode, reqOptions, logger)
             }
+        }).catch(function(e) {
+            if (e.errno === 'ECONNRESET') {
+                logger.error("teraserver-hdfs: HDFS is currently down", e)
+            }
+            else {
+                logger.error("teraserver-hdfs:",e)
+            }
+
+            res.status(503).end()
         });
 }
 

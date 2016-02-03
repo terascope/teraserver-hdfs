@@ -4,6 +4,7 @@ var utils = require('./hdfs-utils');
 
 module.exports = function(config) {
     var endpoint = config.server_config['teraserver-hdfs'];
+    var logger = config.logger;
 
     return function(req, res) {
         var ticket = utils.checkTicket(req, endpoint);
@@ -57,11 +58,21 @@ module.exports = function(config) {
                             utils.getData(client, filePath, reqOptions, reqOptions)
                                 .then(function(data) {
                                     res.status(statusCode).send(data);
+                                })
+                                .catch(function(e){
+                                    if (e.errno === 'ECONNRESET') {
+                                        logger.error("teraserver-hdfs: HDFS is currently down", e)
+                                    }
+                                    else {
+                                        logger.error("teraserver-hdfs:",e)
+                                    }
+
+                                    res.status(503).end()
                                 });
                         }
                         else {
                             var getChunks = utils.getChunks;
-                            getChunks(client, filePath, res, startByte, byteInterval, bytes.length, statusCode, reqOptions);
+                            getChunks(client, filePath, res, startByte, byteInterval, bytes.length, statusCode, reqOptions, logger);
 
                         }
                     }
